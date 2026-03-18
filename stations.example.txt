@@ -1,0 +1,5 @@
+# Example station list for metar-cli.py
+# Use 4-letter ICAO identifiers, separated by commas or whitespace.
+
+CYXY
+CYVR, CYYZ
