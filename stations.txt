@@ -1,0 +1,4 @@
+# Default stations used by launch-metar.cmd
+# Replace these with your preferred stations.
+
+CYXY

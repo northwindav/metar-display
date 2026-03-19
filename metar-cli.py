@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import socket
 import sys
 from collections import defaultdict
 from datetime import datetime, timedelta, timezone, tzinfo
@@ -194,7 +195,22 @@ def fetch_metars(station_codes: Sequence[str], hours: int) -> list[dict]:
 		if exc.code == 429:
 			raise SystemExit("The API rate limit was exceeded. Wait before sending another request.") from exc
 		raise SystemExit(f"The API returned HTTP {exc.code}: {exc.reason}") from exc
+	except TimeoutError as exc:
+		raise SystemExit(
+			f"Request timed out after {DEFAULT_TIMEOUT_SECONDS} seconds. "
+			"Please retry or increase DEFAULT_TIMEOUT_SECONDS."
+		) from exc
+	except socket.timeout as exc:
+		raise SystemExit(
+			f"Request timed out after {DEFAULT_TIMEOUT_SECONDS} seconds. "
+			"Please retry or increase DEFAULT_TIMEOUT_SECONDS."
+		) from exc
 	except error.URLError as exc:
+		if isinstance(exc.reason, TimeoutError):
+			raise SystemExit(
+				f"Request timed out after {DEFAULT_TIMEOUT_SECONDS} seconds. "
+				"Please retry or increase DEFAULT_TIMEOUT_SECONDS."
+			) from exc
 		raise SystemExit(f"Unable to reach aviationweather.gov: {exc.reason}") from exc
 
 	if status_code == 204 or not payload:
