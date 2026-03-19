@@ -1,5 +1,5 @@
-# Example station list for metar-cli.py
-# Use 4-letter ICAO identifiers, separated by commas or whitespace.
-
+# First line: Full path to python.exe
+C:\Users\michsmit\AppData\Local\miniconda3\envs\geomet-ua\python.exe
+# Following lines: Station codes (4-letter ICAO identifiers, separated by commas or whitespace)
 CYXY
 CYVR, CYYZ

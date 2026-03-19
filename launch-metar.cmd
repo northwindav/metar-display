@@ -4,14 +4,33 @@ setlocal EnableExtensions EnableDelayedExpansion
 mode con cols=100 lines=31 >nul
 
 set "SCRIPT_DIR=%~dp0"
-set "PYTHON_EXE=C:\Users\michsmit\AppData\Local\miniconda3\envs\geomet-ua\python.exe"
 set "SCRIPT_PATH=%SCRIPT_DIR%metar-cli.py"
 set "DEFAULT_CONFIG=%SCRIPT_DIR%stations.txt"
 set "FALLBACK_CONFIG=%SCRIPT_DIR%stations.example.txt"
+set "PYTHON_EXE="
+
+if exist "%DEFAULT_CONFIG%" (
+	for /f "usebackq delims=" %%A in ("%DEFAULT_CONFIG%") do (
+		if not "%%A:~0,1%"=="#" (
+			if "%%A:~-4%"==".exe" (
+				set "PYTHON_EXE=%%A"
+			)
+		)
+	)
+) else (
+	for /f "usebackq delims=" %%A in ("%FALLBACK_CONFIG%") do (
+		if not "%%A:~0,1%"=="#" (
+			if "%%A:~-4%"==".exe" (
+				set "PYTHON_EXE=%%A"
+			)
+		)
+	)
+)
 
 if not exist "%PYTHON_EXE%" (
-	echo Python interpreter not found:
-	echo   %PYTHON_EXE%
+	echo Python interpreter not found.
+	echo Ensure the first non-comment line in %DEFAULT_CONFIG%
+	echo ends with .exe and contains the full path to python.exe
 	echo.
 	pause
 	exit /b 1
