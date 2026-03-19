@@ -1,5 +1,5 @@
 # First line: Full path to python.exe
-C:\Users\michsmit\AppData\Local\miniconda3\envs\geomet-ua\python.exe
+<full-path-to-python-executable>python.exe
 # Following lines: Station codes (4-letter ICAO identifiers, separated by commas or whitespace)
-CYXY
+CYOW
 CYVR, CYYZ
