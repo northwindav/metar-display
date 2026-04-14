@@ -66,7 +66,7 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
 	)
 	parser.add_argument(
 		"--stations",
-		help="Comma-delimited 4-letter ICAO station list, for example CYXY,CYVR.",
+		help="Comma-delimited 4-character station list (letters and numbers), for example CYXY,CFA5.",
 	)
 	parser.add_argument(
 		"--config",
@@ -104,12 +104,28 @@ def parse_station_tokens(raw_text: str) -> list[str]:
 	return station_codes
 
 
+def parse_station_tokens_from_config(raw_text: str) -> list[str]:
+	station_codes: list[str] = []
+	skipped_python_line = False
+	for line in raw_text.splitlines():
+		content = line.split("#", 1)[0].strip()
+		if not content:
+			continue
+		if not skipped_python_line:
+			skipped_python_line = True
+			if content.lower().endswith(".exe"):
+				continue
+		normalized = content.replace(",", " ")
+		station_codes.extend(token.strip().upper() for token in normalized.split())
+	return station_codes
+
+
 def load_station_codes(args: argparse.Namespace) -> list[str]:
 	collected: list[str] = []
 
 	if args.config:
 		try:
-			collected.extend(parse_station_tokens(args.config.read_text(encoding="utf-8")))
+			collected.extend(parse_station_tokens_from_config(args.config.read_text(encoding="utf-8")))
 		except FileNotFoundError as exc:
 			raise SystemExit(f"Configuration file not found: {args.config}") from exc
 		except OSError as exc:
@@ -136,8 +152,10 @@ def load_station_codes(args: argparse.Namespace) -> list[str]:
 
 
 def validate_station_code(code: str) -> None:
-	if len(code) != 4 or not code.isalpha():
-		raise SystemExit(f"Invalid station code '{code}'. Use 4-letter ICAO identifiers such as CYXY.")
+	if len(code) != 4 or not code.isalnum():
+		raise SystemExit(
+			f"Invalid station code '{code}'. Use 4-character station identifiers (letters and numbers) such as CYXY or CFA5."
+		)
 
 
 def validate_hours(hours: int) -> None:

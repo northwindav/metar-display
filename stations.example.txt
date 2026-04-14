@@ -1,5 +1,5 @@
 # First line: Full path to python.exe
 <full-path-to-python-executable>python.exe
-# Following lines: Station codes (4-letter ICAO identifiers, separated by commas or whitespace)
+# Following lines: Station codes (4-character identifiers, letters/numbers, separated by commas or whitespace)
 CYOW
 CYVR, CYYZ

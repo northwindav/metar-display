@@ -20,7 +20,7 @@ Standard library modules used: `argparse`, `json`, `urllib`, `zoneinfo`, `pathli
 
 | Option | Type | Default | Description |
 |---|---|---|---|
-| `--stations` | `str` | *(none)* | Comma-delimited list of up to 3 four-letter ICAO station codes, e.g. `CYXY,CYVR`. Required unless `--config` is provided. |
+| `--stations` | `str` | *(none)* | Comma-delimited list of up to 3 four-character station identifiers (letters and numbers), e.g. `CYXY,CFA5`. Required unless `--config` is provided. |
 | `--config` | `str` (file path) | *(none)* | Path to a plain-text file containing station codes. Codes may be separated by commas or whitespace; `#` starts a comment. Required unless `--stations` is provided. Both options may be combined. |
 | `--hours` | `int` | `25` | Number of hours of observations to return, from `1` to `48`. |
 | `--order` | `str` | `desc` | Time-sort order for observations: `desc` (most recent first) or `asc` (oldest first). |
@@ -31,7 +31,8 @@ Standard library modules used: `argparse`, `json`, `urllib`, `zoneinfo`, `pathli
 ```text
 # Stations of interest
 CYXY          # Whitehorse
-CYVR, CYYZ   # Vancouver and Toronto
+CFA5          # Grande Prairie area pseudo-ICAO
+CYVR, CYYZ    # Vancouver and Toronto
 ```
 
 ---
@@ -84,10 +85,10 @@ Timestamps are shown in Pacific time (automatically uses PDT or PST depending on
 ### 4 — Multiple stations from command line
 
 ```bash
-python metar-cli.py --stations CYXY,CYVR,CYYZ --hours 12 --order asc
+python metar-cli.py --stations CYXY,CFA5,CYYZ --hours 12 --order asc
 ```
 
-Returns 12 hours of METARs for Whitehorse, Vancouver, and Toronto, sorted oldest-first.
+Returns 12 hours of METARs for Whitehorse, a pseudo-ICAO station (CFA5), and Toronto, sorted oldest-first.
 
 ---
 

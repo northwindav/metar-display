@@ -10,18 +10,22 @@ set "FALLBACK_CONFIG=%SCRIPT_DIR%stations.example.txt"
 set "PYTHON_EXE="
 
 if exist "%DEFAULT_CONFIG%" (
-	for /f "usebackq delims=" %%A in ("%DEFAULT_CONFIG%") do (
-		if not "%%A:~0,1%"=="#" (
-			if "%%A:~-4%"==".exe" (
-				set "PYTHON_EXE=%%A"
+	for /f "usebackq eol=# delims=" %%A in ("%DEFAULT_CONFIG%") do (
+		if not "%%A"=="" (
+			if not defined PYTHON_EXE (
+				if /i "%%~xA"==".exe" (
+					set "PYTHON_EXE=%%~fA"
+				)
 			)
 		)
 	)
 ) else (
-	for /f "usebackq delims=" %%A in ("%FALLBACK_CONFIG%") do (
-		if not "%%A:~0,1%"=="#" (
-			if "%%A:~-4%"==".exe" (
-				set "PYTHON_EXE=%%A"
+	for /f "usebackq eol=# delims=" %%A in ("%FALLBACK_CONFIG%") do (
+		if not "%%A"=="" (
+			if not defined PYTHON_EXE (
+				if /i "%%~xA"==".exe" (
+					set "PYTHON_EXE=%%~fA"
+				)
 			)
 		)
 	)
